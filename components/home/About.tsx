@@ -3,23 +3,26 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { configureGsap } from "@/lib/gsap-setup";
+import {
+  getMotionProfile,
+  getScrollTriggerScrub,
+} from "@/lib/motion-prefs";
 import { splitParagraphsIntoLines } from "@/lib/split-text-lines";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const ABOUT_PARAGRAPHS = [
   "Hyper Nest exists to help ambitious businesses turn their digital presence into a measurable growth asset. We combine strategy, design, development, and automation to create experiences that not only look exceptional but also drive engagement, generate leads, and increase conversions. Every project is built with performance, scalability, and user experience at its core, ensuring that brands can compete confidently in an increasingly digital world.",
   "From startups launching their first product to established companies ready to accelerate growth, we partner closely with our clients to solve complex challenges, uncover new opportunities, and build solutions that deliver lasting impact. Our approach blends creative thinking with technical precision, resulting in websites, applications, and digital systems that are fast, intuitive, and purpose-driven. We believe great digital products should do more than exist online—they should attract attention, build trust, and create momentum for sustainable business growth.",
 ];
 
-const LINE_DURATION = 1;
-const LINE_STAGGER = 0.92;
+const LINE_DURATION = 0.75;
+const LINE_STAGGER = 0.58;
 
-function getScrollDistance(lineCount: number) {
+function getScrollDistance(lineCount: number, lite: boolean) {
   const viewport = window.innerHeight;
   const mobile = window.innerWidth < 768;
-  const base = mobile ? viewport * 1.4 : viewport * 1.75;
-  const perLine = mobile ? viewport * 0.14 : viewport * 0.16;
+  const base = mobile ? viewport * 0.95 : lite ? viewport * 1.1 : viewport * 1.25;
+  const perLine = mobile ? viewport * 0.08 : lite ? viewport * 0.09 : viewport * 0.1;
   return base + lineCount * perLine;
 }
 
@@ -29,14 +32,15 @@ export default function About() {
   const textRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
+    configureGsap();
+
     const section = sectionRef.current;
     const pin = pinRef.current;
     const textContainer = textRef.current;
     if (!section || !pin || !textContainer) return;
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const profile = getMotionProfile();
+    const scrub = getScrollTriggerScrub(profile);
 
     let resizeTimer: ReturnType<typeof setTimeout> | undefined;
     let rafId = 0;
@@ -52,12 +56,12 @@ export default function About() {
       const lines = splitParagraphsIntoLines(textContainer, ABOUT_PARAGRAPHS);
       if (!lines.length) return false;
 
-      if (prefersReducedMotion) {
+      if (profile.reduced) {
         lines.forEach((line) => line.style.setProperty("--reveal", "100"));
         return true;
       }
 
-      const scrollDistance = getScrollDistance(lines.length);
+      const scrollDistance = getScrollDistance(lines.length, profile.lite);
 
       ctx = gsap.context(() => {
         lines.forEach((line) => line.style.setProperty("--reveal", "0"));
@@ -66,7 +70,7 @@ export default function About() {
           scrollTrigger: {
             trigger: section,
             pin: pin,
-            scrub: true,
+            scrub,
             start: "top top",
             end: `+=${scrollDistance}`,
             invalidateOnRefresh: true,
@@ -109,10 +113,12 @@ export default function About() {
         if (setup()) {
           ScrollTrigger.refresh();
         }
-      }, 200);
+      }, 250);
     };
 
+    const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("resize", handleResize);
+    document.fonts.ready.then(refresh).catch(() => {});
 
     return () => {
       cancelled = true;
@@ -136,7 +142,6 @@ export default function About() {
             About Hyper Nest
           </p>
 
-          {/* Lines are injected by splitParagraphsIntoLines — keep empty so React does not overwrite them */}
           <div
             ref={textRef}
             className="about-story-text"

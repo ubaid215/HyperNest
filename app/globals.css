@@ -237,7 +237,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Native smooth scroll conflicts with GSAP ScrollTrigger scrub — Lenis handles smoothness */
+  scroll-behavior: auto;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   font-size: 16px;
@@ -925,13 +926,53 @@ h6 { font-family: var(--font-body);    font-size: var(--text-lg);  font-weight: 
   margin-bottom: var(--space-6);
 }
 
-.hero-headline-mobile {
-  display: none;
-}
-
 .hero-subheadline {
   max-width: 54ch;
   margin-bottom: var(--space-10);
+}
+
+.hero-ticker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  border-top: 1px solid rgba(20, 20, 32, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+  padding: 0.7rem 0;
+}
+
+.hero-ticker-track {
+  display: flex;
+  gap: 0 3rem;
+  width: max-content;
+  animation: hero-ticker-scroll 22s linear infinite;
+}
+
+.hero-ticker-item {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.hero-ticker-dot {
+  color: var(--color-primary);
+  font-size: 0.5rem;
+  opacity: 0.5;
+}
+
+@keyframes hero-ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* ============================================================
@@ -2549,7 +2590,6 @@ a.contact-info-item:hover .contact-info-value {
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  will-change: transform, opacity;
 }
 
 .services-scroll-grid-lines {
@@ -2612,7 +2652,6 @@ a.contact-info-item:hover .contact-info-value {
   display: flex;
   align-items: center;
   justify-content: center;
-  will-change: transform, opacity, filter;
 }
 
 .service-slide-panel {
@@ -2627,7 +2666,6 @@ a.contact-info-item:hover .contact-info-value {
   box-shadow:
     0 32px 72px rgba(0, 0, 0, 0.28),
     0 12px 32px rgba(0, 0, 0, 0.14);
-  will-change: transform, box-shadow;
   isolation: isolate;
 }
 
@@ -2673,7 +2711,6 @@ a.contact-info-item:hover .contact-info-value {
   box-shadow:
     0 24px 60px rgba(0, 0, 0, 0.38),
     0 0 0 1px rgba(255, 255, 255, 0.08);
-  will-change: transform;
   transition:
     transform 0.55s var(--ease-out),
     box-shadow 0.55s var(--ease-out),
@@ -2735,7 +2772,6 @@ a.contact-info-item:hover .contact-info-value {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  will-change: transform;
 }
 
 .service-slide-panel .service-card-title {
@@ -4116,6 +4152,10 @@ a.contact-info-item:hover .contact-info-value {
 .show-mobile { display: none; }
 
 @media (max-width: 768px) {
+  html {
+    background-attachment: scroll;
+  }
+
   .hide-mobile { display: none; }
   .show-mobile { display: block; }
 
@@ -4139,24 +4179,6 @@ a.contact-info-item:hover .contact-info-value {
     letter-spacing: -0.025em;
     max-width: none;
     margin-bottom: var(--space-4);
-  }
-
-  .hero-headline-desktop {
-    display: none;
-  }
-
-  .hero-headline-mobile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.1em;
-    width: 100%;
-  }
-
-  .hero-headline-line {
-    display: block;
-    width: 100%;
-    text-align: center;
   }
 
   .hero-headline [data-fog-word] {
@@ -4220,7 +4242,8 @@ a.contact-info-item:hover .contact-info-value {
   .animate-float,
   .animate-float-slow,
   .animate-glow-pulse,
-  .cursor-glow {
+  .cursor-glow,
+  .hero-ticker-track {
     animation: none;
   }
 }

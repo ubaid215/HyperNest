@@ -12,6 +12,8 @@ interface FogRevealProps {
   position?: string | number;
   /** When false, only renders word spans for an external GSAP timeline */
   animate?: boolean;
+  /** Lighter entrance — opacity + y only (no blur filter) */
+  lite?: boolean;
 }
 
 export default function FogReveal({
@@ -22,6 +24,7 @@ export default function FogReveal({
   timeline,
   position = 0,
   animate = true,
+  lite = false,
 }: FogRevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const words = text.split(" ");
@@ -35,15 +38,19 @@ export default function FogReveal({
     const targets = el.querySelectorAll("[data-fog-word]");
     if (!targets.length) return;
 
-    const from = { opacity: 0, filter: "blur(14px)", y: 14 };
-    const to = {
-      opacity: 1,
-      filter: "blur(0px)",
-      y: 0,
-      duration: 0.85,
-      stagger,
-      ease: "power2.out",
-    };
+    const from = lite
+      ? { opacity: 0, y: 10 }
+      : { opacity: 0, filter: "blur(14px)", y: 14 };
+    const to = lite
+      ? { opacity: 1, y: 0, duration: 0.65, stagger, ease: "power2.out" }
+      : {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          duration: 0.85,
+          stagger,
+          ease: "power2.out",
+        };
 
     if (timeline) {
       timeline.fromTo(targets, from, to, position);
@@ -55,7 +62,11 @@ export default function FogReveal({
     }, el);
 
     return () => ctx.revert();
-  }, [text, stagger, timeline, position, animate]);
+  }, [text, stagger, timeline, position, animate, lite]);
+
+  const hiddenStyle = lite
+    ? { opacity: 0 }
+    : { opacity: 0, filter: "blur(14px)" };
 
   return (
     <Tag ref={ref as never} className={className} aria-label={text}>
@@ -67,7 +78,7 @@ export default function FogReveal({
           style={{
             marginRight: "0.28em",
             marginBottom: "0.06em",
-            ...(animate ? {} : { opacity: 0, filter: "blur(14px)" }),
+            ...(animate ? {} : hiddenStyle),
           }}
         >
           {word}

@@ -1,12 +1,13 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import MagneticButton from "@/components/ui/MagneticButton";
 import SideRays from "@/components/ui/SideRays";
 import GridBackgroundDemo from "@/components/ui/grid-background-demo";
 import FogReveal from "@/components/ui/FogReveal";
+import { getMotionProfile } from "@/lib/motion-prefs";
 
 const SERVICES = [
   "Web Design",
@@ -27,6 +28,9 @@ export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const [showRays, setShowRays] = useState(false);
+  const [raysLite, setRaysLite] = useState(false);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -36,13 +40,23 @@ export default function Hero() {
 
   const ticker = [...SERVICES, ...SERVICES];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const section = ref.current;
     const badge = badgeRef.current;
     const ctas = ctaRef.current;
-    if (!badge || !ctas) return;
+    if (!section || !badge || !ctas) return;
+
+    const { reduced, lite, useWebGL } = getMotionProfile();
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+      if (reduced) {
+        gsap.set([badge, ...ctas.children], { opacity: 1, y: 0, clearProps: "filter" });
+        const words = section.querySelectorAll("[data-fog-word]");
+        if (words.length) gsap.set(words, { opacity: 1, y: 0, clearProps: "filter" });
+        return;
+      }
 
       tl.fromTo(
         badge,
@@ -50,8 +64,8 @@ export default function Hero() {
         { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.7 },
       );
 
-      const headlineWords = ref.current?.querySelectorAll("[data-hero-headline] [data-fog-word]");
-      if (headlineWords?.length) {
+      const headlineWords = section.querySelectorAll("[data-hero-headline] [data-fog-word]");
+      if (headlineWords.length) {
         tl.fromTo(
           headlineWords,
           { opacity: 0, filter: "blur(14px)", y: 14 },
@@ -60,8 +74,8 @@ export default function Hero() {
         );
       }
 
-      const subWords = ref.current?.querySelectorAll("[data-hero-sub] [data-fog-word]");
-      if (subWords?.length) {
+      const subWords = section.querySelectorAll("[data-hero-sub] [data-fog-word]");
+      if (subWords.length) {
         tl.fromTo(
           subWords,
           { opacity: 0, filter: "blur(12px)", y: 10 },
@@ -78,7 +92,26 @@ export default function Hero() {
       );
     }, ref);
 
-    return () => ctx.revert();
+    let rayIdleId: number | undefined;
+    let rayTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    if (useWebGL) {
+      const enableRays = () => {
+        setRaysLite(lite);
+        setShowRays(true);
+      };
+      if ("requestIdleCallback" in window) {
+        rayIdleId = window.requestIdleCallback(enableRays, { timeout: 800 });
+      } else {
+        rayTimeoutId = setTimeout(enableRays, 400);
+      }
+    }
+
+    return () => {
+      ctx.revert();
+      if (rayIdleId !== undefined) window.cancelIdleCallback(rayIdleId);
+      if (rayTimeoutId !== undefined) clearTimeout(rayTimeoutId);
+    };
   }, []);
 
   return (
@@ -86,38 +119,42 @@ export default function Hero() {
       <div className="hero-bg-gradient" />
       <GridBackgroundDemo />
 
-      <div className="absolute inset-0 z-[1]" aria-hidden="true">
-        <div className="absolute inset-0">
-          <SideRays
-            speed={1.2}
-            rayColor1="#0e4d8a"
-            rayColor2="#7ab8f5"
-            intensity={1.6}
-            spread={2.0}
-            origin="top-left"
-            tilt={6}
-            saturation={1.1}
-            blend={0.6}
-            falloff={1.9}
-            opacity={0.65}
-          />
+      {showRays && (
+        <div className="absolute inset-0 z-[1]" aria-hidden="true">
+          <div className="absolute inset-0">
+            <SideRays
+              speed={1.2}
+              rayColor1="#0e4d8a"
+              rayColor2="#7ab8f5"
+              intensity={raysLite ? 1.2 : 1.6}
+              spread={2.0}
+              origin="top-left"
+              tilt={6}
+              saturation={1.1}
+              blend={0.6}
+              falloff={1.9}
+              opacity={raysLite ? 0.45 : 0.65}
+            />
+          </div>
+          {!raysLite && (
+            <div className="absolute inset-0">
+              <SideRays
+                speed={1.2}
+                rayColor1="#0e4d8a"
+                rayColor2="#7ab8f5"
+                intensity={1.6}
+                spread={2.0}
+                origin="top-right"
+                tilt={-6}
+                saturation={1.1}
+                blend={0.6}
+                falloff={1.9}
+                opacity={0.65}
+              />
+            </div>
+          )}
         </div>
-        <div className="absolute inset-0">
-          <SideRays
-            speed={1.2}
-            rayColor1="#0e4d8a"
-            rayColor2="#7ab8f5"
-            intensity={1.6}
-            spread={2.0}
-            origin="top-right"
-            tilt={-6}
-            saturation={1.1}
-            blend={0.6}
-            falloff={1.9}
-            opacity={0.65}
-          />
-        </div>
-      </div>
+      )}
 
       <motion.div
         className="container relative z-10 flex flex-col items-center text-center"
@@ -134,24 +171,16 @@ export default function Hero() {
           data-hero-headline
           className="hero-headline display-lg text-balance mx-auto"
         >
-          <span className="hero-headline-desktop">
-            <FogReveal text={HEADLINE} animate={false} />
-          </span>
-          <span className="hero-headline-mobile">
-            <span className="hero-headline-line">
-              <FogReveal text="Where Strategy," animate={false} />
-            </span>
-            <span className="hero-headline-line">
-              <FogReveal text="Design & Technology" animate={false} />
-            </span>
-            <span className="hero-headline-line">
-              <FogReveal text="Converge" animate={false} />
-            </span>
-          </span>
+          <FogReveal text={HEADLINE} animate={false} />
         </h1>
 
         <div data-hero-sub className="hero-subheadline body-lg text-muted mx-auto">
-          <FogReveal text={SUBHEADLINE} as="p" className="body-lg text-muted" animate={false} />
+          <FogReveal
+            text={SUBHEADLINE}
+            as="p"
+            className="body-lg text-muted"
+            animate={false}
+          />
         </div>
 
         <div ref={ctaRef} className="hero-ctas flex flex-wrap justify-center gap-4">
@@ -164,61 +193,18 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      <motion.div
-        aria-hidden="true"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.1, duration: 0.6 }}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10,
-          borderTop: "1px solid rgba(20, 20, 32, 0.08)",
-          background: "rgba(255, 255, 255, 0.72)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          overflow: "hidden",
-          padding: "0.7rem 0",
-        }}
-      >
-        <motion.div
-          style={{
-            display: "flex",
-            gap: "0 3rem",
-            width: "max-content",
-          }}
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            duration: 22,
-            ease: "linear",
-            repeat: Infinity,
-          }}
-        >
+      <div className="hero-ticker" aria-hidden="true">
+        <div className="hero-ticker-track">
           {ticker.map((service, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: "0.7rem",
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: "var(--color-ink-muted)",
-                whiteSpace: "nowrap",
-                display: "flex",
-                alignItems: "center",
-                gap: "3rem",
-              }}
-            >
+            <span key={i} className="hero-ticker-item">
               {service}
-              <span style={{ color: "var(--color-primary)", fontSize: "0.5rem", opacity: 0.5 }}>
+              <span className="hero-ticker-dot" aria-hidden="true">
                 ◆
               </span>
             </span>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
