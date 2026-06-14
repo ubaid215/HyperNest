@@ -7,7 +7,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Hyper Nest — Digital Products That Perform",
   description:
-    "Hyper Nest builds custom websites, e-commerce stores, web apps, and mobile apps. Based in Australia, working globally.",
+    "Hyper Nest builds custom websites, e-commerce stores, web apps, and mobile apps. Based in Canberra, ACT — working globally.",
 };
 
 export default function RootLayout({

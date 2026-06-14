@@ -21,8 +21,8 @@ const LINE_STAGGER = 0.58;
 function getScrollDistance(lineCount: number, lite: boolean) {
   const viewport = window.innerHeight;
   const mobile = window.innerWidth < 768;
-  const base = mobile ? viewport * 0.95 : lite ? viewport * 1.1 : viewport * 1.25;
-  const perLine = mobile ? viewport * 0.08 : lite ? viewport * 0.09 : viewport * 0.1;
+  const base = mobile ? viewport * 0.7 : lite ? viewport * 0.95 : viewport * 1.15;
+  const perLine = mobile ? viewport * 0.06 : lite ? viewport * 0.08 : viewport * 0.09;
   return base + lineCount * perLine;
 }
 

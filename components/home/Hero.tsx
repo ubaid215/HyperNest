@@ -58,19 +58,30 @@ export default function Hero() {
         return;
       }
 
+      const badgeBlur = lite ? "blur(0px)" : "blur(10px)";
+      const wordBlur = lite ? "blur(0px)" : "blur(14px)";
+      const subBlur = lite ? "blur(0px)" : "blur(12px)";
+      const ctaBlur = lite ? "blur(0px)" : "blur(8px)";
+
       tl.fromTo(
         badge,
-        { opacity: 0, filter: "blur(10px)", y: 12 },
-        { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.7 },
+        { opacity: 0, filter: badgeBlur, y: lite ? 8 : 12 },
+        { opacity: 1, filter: "blur(0px)", y: 0, duration: lite ? 0.45 : 0.7 },
       );
 
       const headlineWords = section.querySelectorAll("[data-hero-headline] [data-fog-word]");
       if (headlineWords.length) {
         tl.fromTo(
           headlineWords,
-          { opacity: 0, filter: "blur(14px)", y: 14 },
-          { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.85, stagger: 0.07 },
-          "-=0.15",
+          { opacity: 0, filter: wordBlur, y: lite ? 10 : 14 },
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            y: 0,
+            duration: lite ? 0.55 : 0.85,
+            stagger: lite ? 0.04 : 0.07,
+          },
+          lite ? "-=0.2" : "-=0.15",
         );
       }
 
@@ -78,17 +89,29 @@ export default function Hero() {
       if (subWords.length) {
         tl.fromTo(
           subWords,
-          { opacity: 0, filter: "blur(12px)", y: 10 },
-          { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.75, stagger: 0.035 },
-          "-=0.35",
+          { opacity: 0, filter: subBlur, y: lite ? 8 : 10 },
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            y: 0,
+            duration: lite ? 0.5 : 0.75,
+            stagger: lite ? 0.02 : 0.035,
+          },
+          lite ? "-=0.3" : "-=0.35",
         );
       }
 
       tl.fromTo(
         ctas.children,
-        { opacity: 0, filter: "blur(8px)", y: 14 },
-        { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.65, stagger: 0.12 },
-        "-=0.2",
+        { opacity: 0, filter: ctaBlur, y: lite ? 10 : 14 },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          duration: lite ? 0.45 : 0.65,
+          stagger: lite ? 0.08 : 0.12,
+        },
+        lite ? "-=0.15" : "-=0.2",
       );
     }, ref);
 
@@ -183,11 +206,11 @@ export default function Hero() {
           />
         </div>
 
-        <div ref={ctaRef} className="hero-ctas flex flex-wrap justify-center gap-4">
+        <div ref={ctaRef} className="hero-ctas hero-ctas-entrance flex flex-wrap justify-center gap-4">
           <MagneticButton href="/contact" featured>
             Start Your Project
           </MagneticButton>
-          <MagneticButton href="/#services" className="btn btn-outline" featured>
+          <MagneticButton href="/services" className="btn btn-outline" featured>
             Explore Our Services
           </MagneticButton>
         </div>

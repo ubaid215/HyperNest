@@ -93,7 +93,7 @@ export const PRIVACY_POLICY: LegalPageData = {
       title: "8. Contact Us",
       paragraphs: [
         "If you have questions about this Privacy Policy or wish to exercise your privacy rights, please contact us:",
-        "Hyper Nest Pty Ltd · Email: hello@hypernest.com.au · Australia",
+        "Hyper Nest Pty Ltd · Email: office@hypernest.com.au · 2 / 74 Katherine Ave, Amaroo, ACT 2914, Australia",
       ],
     },
   ],
@@ -191,7 +191,7 @@ export const TERMS_OF_SERVICE: LegalPageData = {
       title: "10. Contact",
       paragraphs: [
         "For questions about these Terms, please contact:",
-        "Hyper Nest Pty Ltd · Email: hello@hypernest.com.au · Australia",
+        "Hyper Nest Pty Ltd · Email: office@hypernest.com.au · 2 / 74 Katherine Ave, Amaroo, ACT 2914, Australia",
       ],
     },
   ],

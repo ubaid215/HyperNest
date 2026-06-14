@@ -6,9 +6,9 @@ import { ArrowRight, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import {
   fadeUp,
   slideFromLeft,
-  slideFromRight,
   staggerContainer,
 } from "@/lib/motion-variants";
+import { SITE } from "@/lib/site-config";
 
 interface FooterLink {
   label: string;
@@ -16,12 +16,12 @@ interface FooterLink {
 }
 
 const SERVICE_LINKS: FooterLink[] = [
-  { label: "Custom Website Design", href: "/#services" },
-  { label: "E-Commerce Development", href: "/#services" },
-  { label: "Web Application Dev", href: "/#services" },
-  { label: "Mobile App Development", href: "/#services" },
-  { label: "SEO & Digital Marketing", href: "/#services" },
-  { label: "Branding & Identity", href: "/#services" },
+  { label: "Custom Website Design", href: "/services#custom-website-design" },
+  { label: "E-Commerce Development", href: "/services#ecommerce-website" },
+  { label: "Web Application Dev", href: "/services#web-application-development" },
+  { label: "Mobile App Development", href: "/services#mobile-app-development" },
+  { label: "SEO & Digital Marketing", href: "/services#search-engine-optimisation" },
+  { label: "View All Services", href: "/services" },
 ];
 
 const COMPANY_LINKS: FooterLink[] = [
@@ -44,8 +44,6 @@ const SOCIAL_LINKS = [
   { label: "Facebook", href: "https://facebook.com" },
 ];
 
-const LOCATIONS = ["Melbourne", "Sydney", "Brisbane"];
-
 const heroStagger = staggerContainer(0.1);
 const gridStagger = staggerContainer(0.08, 0.05);
 const linkStagger = staggerContainer(0.05, 0.1);
@@ -67,130 +65,126 @@ export default function Footer() {
         </div>
 
         <div className="container footer-mega-inner">
-        <motion.div
-          className="footer-mega-hero"
-          variants={heroStagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-        >
-          <motion.div className="footer-mega-hero-copy" variants={slideFromLeft}>
-            <span className="footer-mega-eyebrow">Work With Hyper Nest</span>
-            <h2 className="footer-mega-hero-title">
-              Let&apos;s build something extraordinary together.
-            </h2>
-            <p className="footer-mega-hero-desc">
-              From strategy to launch, we partner with ambitious brands to create digital
-              experiences that perform — and keep growing long after go-live.
-            </p>
-          </motion.div>
+          {/* Section 1 — CTA */}
+          <motion.div
+            className="footer-mega-hero"
+            variants={heroStagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+          >
+            <motion.div className="footer-mega-hero-copy" variants={slideFromLeft}>
+              <span className="footer-mega-eyebrow">Work With {SITE.brandName}</span>
+              <h2 className="footer-mega-hero-title">
+                Let&apos;s build something extraordinary together.
+              </h2>
+              <p className="footer-mega-hero-desc">
+                From strategy to launch, we partner with ambitious brands to create digital
+                experiences that perform — and keep growing long after go-live.
+              </p>
+            </motion.div>
 
-          <motion.div className="footer-mega-hero-actions" variants={slideFromRight}>
-            <Link href="/contact" className="btn btn-primary btn-lg footer-mega-btn">
-              Book a Free Discovery Call
-              <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-            <Link href="/contact" className="btn btn-outline btn-lg footer-mega-btn footer-mega-btn-ghost">
-              Send a Message
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </Link>
-            <span className="footer-mega-response">
-              <span className="footer-mega-response-dot" aria-hidden="true" />
-              Response within 24 hours
-            </span>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="footer-mega-grid"
-          variants={gridStagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-        >
-          <motion.div className="footer-mega-brand" variants={fadeUp}>
-            <Link href="/" className="footer-mega-logo" aria-label="Hyper Nest — home">
-              <span className="logo-dot" aria-hidden="true" />
-              <span className="logo-text">
-                Hyper<span className="text-primary">Nest</span>
+            <motion.div className="footer-mega-hero-actions" variants={fadeUp}>
+              <Link href="/contact" className="btn btn-primary btn-lg footer-mega-btn">
+                Book a Free Discovery Call
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
+              <Link href="/contact" className="btn btn-outline btn-lg footer-mega-btn footer-mega-btn-ghost">
+                Send a Message
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </Link>
+              <span className="footer-mega-response">
+                <span className="footer-mega-response-dot" aria-hidden="true" />
+                Response within 24 hours
               </span>
-            </Link>
-            <p className="footer-mega-tagline">
-              Building digital products that perform. Based in Australia, working globally.
-            </p>
-            <div className="footer-mega-social" role="list" aria-label="Social media">
-              {SOCIAL_LINKS.map((social) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-mega-social-link"
-                  role="listitem"
-                  whileHover={{ y: -3 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {social.label}
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </motion.a>
-              ))}
-            </div>
+            </motion.div>
           </motion.div>
 
-          <motion.nav className="footer-mega-col" variants={fadeUp} aria-label="Services">
-            <h3 className="footer-mega-col-title">Services</h3>
-            <motion.ul className="footer-mega-links" variants={linkStagger}>
-              {SERVICE_LINKS.map((link) => (
-                <motion.li key={link.label} variants={fadeUp}>
-                  <Link href={link.href} className="footer-mega-link">
-                    {link.label}
-                  </Link>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </motion.nav>
+          {/* Section 2 — Links grid (desktop: 4-col, mobile: 2-col) */}
+          <motion.div
+            className="footer-mega-grid"
+            variants={gridStagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+          >
+            <motion.div className="footer-mega-brand footer-mega-brand--desktop" variants={fadeUp}>
+              <Link href="/" className="footer-mega-logo" aria-label={`${SITE.brandName} — home`}>
+                <span className="logo-dot" aria-hidden="true" />
+                <span className="logo-text">
+                  Hyper<span className="text-primary">Nest</span>
+                </span>
+              </Link>
+              <p className="footer-mega-tagline">{SITE.tagline}</p>
+              <div className="footer-mega-social" role="list" aria-label="Social media">
+                {SOCIAL_LINKS.map((social) => (
+                  <motion.a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-mega-social-link"
+                    role="listitem"
+                    whileHover={{ y: -3 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {social.label}
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
 
-          <motion.nav className="footer-mega-col" variants={fadeUp} aria-label="Company">
-            <h3 className="footer-mega-col-title">Company</h3>
-            <motion.ul className="footer-mega-links" variants={linkStagger}>
-              {COMPANY_LINKS.map((link) => (
-                <motion.li key={link.label} variants={fadeUp}>
-                  <Link href={link.href} className="footer-mega-link">
-                    {link.label}
-                  </Link>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </motion.nav>
+            <motion.nav className="footer-mega-col" variants={fadeUp} aria-label="Services">
+              <h3 className="footer-mega-col-title">Services</h3>
+              <motion.ul className="footer-mega-links" variants={linkStagger}>
+                {SERVICE_LINKS.map((link) => (
+                  <motion.li key={link.label} variants={fadeUp}>
+                    <Link href={link.href} className="footer-mega-link">
+                      {link.label}
+                    </Link>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </motion.nav>
 
-          <motion.div className="footer-mega-col footer-mega-contact" variants={fadeUp}>
-            <h3 className="footer-mega-col-title">Get in Touch</h3>
-            <ul className="footer-mega-contact-list">
-              <li>
-                <a href="mailto:hello@hypernest.com.au" className="footer-mega-contact-item">
-                  <Mail size={16} aria-hidden="true" />
-                  hello@hypernest.com.au
-                </a>
-              </li>
-              <li>
-                <a href="tel:+61290000000" className="footer-mega-contact-item">
-                  <Phone size={16} aria-hidden="true" />
-                  +61 (0)2 9000 0000
-                </a>
-              </li>
-              <li className="footer-mega-contact-locations">
-                <MapPin size={16} aria-hidden="true" />
-                <div className="footer-mega-location-pills">
-                  {LOCATIONS.map((city) => (
-                    <span key={city} className="footer-mega-location-pill">
-                      {city}
-                    </span>
-                  ))}
-                </div>
-              </li>
-            </ul>
+            <motion.nav className="footer-mega-col" variants={fadeUp} aria-label="Company">
+              <h3 className="footer-mega-col-title">Company</h3>
+              <motion.ul className="footer-mega-links" variants={linkStagger}>
+                {COMPANY_LINKS.map((link) => (
+                  <motion.li key={link.label} variants={fadeUp}>
+                    <Link href={link.href} className="footer-mega-link">
+                      {link.label}
+                    </Link>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </motion.nav>
+
+            <motion.div className="footer-mega-col footer-mega-contact footer-mega-contact--desktop" variants={fadeUp}>
+              <h3 className="footer-mega-col-title">Get in Touch</h3>
+              <ul className="footer-mega-contact-list">
+                <li>
+                  <a href={SITE.emailHref} className="footer-mega-contact-item">
+                    <Mail size={16} aria-hidden="true" />
+                    {SITE.email}
+                  </a>
+                </li>
+                <li>
+                  <a href={SITE.phoneHref} className="footer-mega-contact-item">
+                    <Phone size={16} aria-hidden="true" />
+                    {SITE.phoneDisplay}
+                  </a>
+                </li>
+                <li className="footer-mega-contact-locations">
+                  <MapPin size={16} aria-hidden="true" />
+                  <address className="footer-mega-address">
+                    {SITE.address.full}
+                  </address>
+                </li>
+              </ul>
+            </motion.div>
           </motion.div>
-        </motion.div>
         </div>
 
         <motion.div
@@ -207,9 +201,10 @@ export default function Footer() {
           </p>
         </motion.div>
 
+        {/* Section 3 — Bottom bar */}
         <div className="container footer-mega-bottom">
           <p className="footer-mega-copyright">
-            © {currentYear} Hyper Nest Pvt Ltd. All rights reserved.
+            © {currentYear} {SITE.legalName}. All rights reserved.
           </p>
           <nav aria-label="Legal links">
             <ul className="footer-mega-legal">

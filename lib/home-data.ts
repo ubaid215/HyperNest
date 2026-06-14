@@ -192,7 +192,7 @@ export const TESTIMONIALS: Testimonial[] = [
       "Our mobile app was delivered on time and on budget. The quality exceeded everything we expected.",
     name: "Priya K.",
     role: "Startup Co-Founder",
-    location: "Brisbane",
+    location: "Canberra",
     initials: "PK",
   },
 ];

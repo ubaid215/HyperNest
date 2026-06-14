@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useLayoutEffect, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
 import HamburgerMenuOverlay, { type MenuItem } from "@/components/ui/hamburger-menu-overlay";
@@ -13,14 +13,23 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Services", href: "/#services" },
+  { label: "Services", href: "/services" },
   { label: "About", href: "/#about" },
   { label: "Process", href: "/#process" },
   { label: "Work", href: "/#work" },
   { label: "Contact", href: "/contact" },
 ];
 
+const HASH_SECTION_IDS = ["about", "process", "work", "services"];
+
 const DESKTOP_MIN_WIDTH = 768;
+
+function normalizePath(path: string) {
+  if (path.length > 1 && path.endsWith("/")) {
+    return path.slice(0, -1);
+  }
+  return path;
+}
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,6 +39,7 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("");
   const toggleRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+  const pathname = normalizePath(usePathname());
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (y) => setIsScrolled(y > 60));
@@ -69,13 +79,14 @@ export default function Navbar() {
   }, [menuOpen, isScrolled, updateClipOrigin]);
 
   useEffect(() => {
-    const sectionIds = NAV_LINKS
-      .map((l) => l.href.replace("/#", "").replace("/", ""))
-      .filter(Boolean);
+    if (pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
 
     const observers: IntersectionObserver[] = [];
 
-    sectionIds.forEach((id) => {
+    HASH_SECTION_IDS.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
       const obs = new IntersectionObserver(
@@ -89,12 +100,28 @@ export default function Navbar() {
     });
 
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [pathname]);
 
-  const isActive = (href: string) => {
-    const id = href.replace("/#", "").replace("/", "");
-    return activeSection === id;
-  };
+  const isActive = useCallback(
+    (href: string) => {
+      if (href === "/services") {
+        return pathname === "/services" || (pathname === "/" && activeSection === "services");
+      }
+
+      if (href === "/contact") {
+        return pathname === "/contact";
+      }
+
+      if (href.startsWith("/#")) {
+        if (pathname !== "/") return false;
+        const id = href.split("#")[1];
+        return activeSection === id;
+      }
+
+      return pathname === href;
+    },
+    [pathname, activeSection],
+  );
 
   const navigate = useCallback(
     (href: string) => {
@@ -107,7 +134,6 @@ export default function Navbar() {
           return;
         }
 
-        // Section is on the home page — full navigation preserves the hash
         window.location.assign(href);
         return;
       }
@@ -122,13 +148,15 @@ export default function Navbar() {
       ...NAV_LINKS.map((link) => ({
         label: link.label,
         onClick: () => navigate(link.href),
+        active: isActive(link.href),
       })),
       {
         label: "Get a Free Quote",
         onClick: () => navigate("/contact"),
+        active: pathname === "/contact",
       },
     ],
-    [navigate],
+    [navigate, isActive, pathname],
   );
 
   return (
@@ -156,6 +184,7 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     className={`nav-link ${isActive(link.href) ? "active" : ""}`}
+                    aria-current={isActive(link.href) ? "page" : undefined}
                   >
                     {link.label}
                   </Link>

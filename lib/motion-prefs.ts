@@ -54,13 +54,17 @@ export function getMotionProfile(): MotionProfile {
     };
   }
 
+  const mobile =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 767px)").matches;
+
   return {
     reduced: false,
     lite,
-    scrub: lite ? 0.85 : 0.6,
+    scrub: mobile ? 0.28 : lite ? 0.45 : 0.55,
     useBlur: !lite,
     useWebGL: !lite,
-    lagSmoothingMs: 33,
+    lagSmoothingMs: mobile ? 50 : 33,
   };
 }
 

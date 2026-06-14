@@ -9,6 +9,7 @@ export interface MenuItem {
   href?: string;
   onClick?: () => void;
   icon?: React.ReactNode;
+  active?: boolean;
 }
 
 export interface HamburgerMenuOverlayProps {
@@ -274,6 +275,16 @@ export function HamburgerMenuOverlay({
             transform: ${isCentered ? "translateX(-50%) scaleX(1)" : "translateY(-50%) scaleX(1)"};
           }
 
+          .${scopeClass} .menu-item.active::before {
+            opacity: 1;
+            transform: ${isCentered ? "translateX(-50%) scaleX(1)" : "translateY(-50%) scaleX(1)"};
+          }
+
+          .${scopeClass} .menu-item.active span {
+            opacity: 1;
+            color: #ffffff;
+          }
+
           .${scopeClass} .menu-item span {
             opacity: 0.82;
             transition: opacity 0.25s ease;
@@ -326,6 +337,7 @@ export function HamburgerMenuOverlay({
                   "menu-item",
                   fontSizes[fontSize],
                   isOpen && "visible",
+                  item.active && "active",
                   menuItemClassName,
                 )}
                 style={{

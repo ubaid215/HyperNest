@@ -15,6 +15,7 @@ import {
 import GridBackgroundDemo from "@/components/ui/grid-background-demo";
 import SideRays from "@/components/ui/SideRays";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { SITE } from "@/lib/site-config";
 
 const SERVICE_OPTIONS = [
   "Custom Website Design",
@@ -25,6 +26,8 @@ const SERVICE_OPTIONS = [
   "Google & Meta Ads Management",
   "Branding & Identity Design",
   "UI/UX Design",
+  "CMS Integration & Setup",
+  "Website Maintenance & Support",
   "Other",
 ];
 
@@ -35,11 +38,9 @@ const SOCIAL_LINKS = [
   { label: "Facebook", href: "https://facebook.com" },
 ];
 
-const LOCATIONS = ["Melbourne", "Sydney", "Brisbane"];
-
 const HERO_STATS = [
   { icon: Clock, label: "Response within 24 hours" },
-  { icon: MapPin, label: "Based in Australia" },
+  { icon: MapPin, label: "Based in Canberra, ACT" },
   { icon: Calendar, label: "Free discovery call" },
 ];
 
@@ -244,24 +245,24 @@ export default function ContactContent() {
                   <h3 className="contact-info-title">Contact Information</h3>
                   <ul className="contact-info-list">
                     <li>
-                      <a href="mailto:hello@hypernest.com.au" className="contact-info-item">
+                      <a href={SITE.emailHref} className="contact-info-item">
                         <span className="contact-info-icon" aria-hidden="true">
                           <Mail size={18} />
                         </span>
                         <span className="contact-info-body">
                           <span className="contact-info-label">Email</span>
-                          <span className="contact-info-value">hello@hypernest.com.au</span>
+                          <span className="contact-info-value">{SITE.email}</span>
                         </span>
                       </a>
                     </li>
                     <li>
-                      <a href="tel:+61290000000" className="contact-info-item">
+                      <a href={SITE.phoneHref} className="contact-info-item">
                         <span className="contact-info-icon" aria-hidden="true">
                           <Phone size={18} />
                         </span>
                         <span className="contact-info-body">
                           <span className="contact-info-label">Phone</span>
-                          <span className="contact-info-value">+61 (0)2 9000 0000</span>
+                          <span className="contact-info-value">{SITE.phoneDisplay}</span>
                         </span>
                       </a>
                     </li>
@@ -271,14 +272,10 @@ export default function ContactContent() {
                           <MapPin size={18} />
                         </span>
                         <span className="contact-info-body">
-                          <span className="contact-info-label">Locations</span>
-                          <span className="contact-location-pills">
-                            {LOCATIONS.map((city) => (
-                              <span key={city} className="contact-location-pill">
-                                {city}
-                              </span>
-                            ))}
-                          </span>
+                          <span className="contact-info-label">Address</span>
+                          <address className="contact-info-value contact-info-address">
+                            {SITE.address.full}
+                          </address>
                         </span>
                       </div>
                     </li>
@@ -296,7 +293,7 @@ export default function ContactContent() {
                     pressure.
                   </p>
                   <MagneticButton
-                    href="mailto:hello@hypernest.com.au?subject=Discovery%20Call%20Request"
+                    href={`${SITE.emailHref}?subject=Discovery%20Call%20Request`}
                     className="btn btn-outline btn-lg contact-book-btn"
                     featured
                   >

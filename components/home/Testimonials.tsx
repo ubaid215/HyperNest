@@ -13,7 +13,7 @@ import {
   staggerContainer,
 } from "@/lib/motion-variants";
 
-const TRUST_CITIES = ["Melbourne", "Sydney", "Brisbane"];
+const TRUST_CITIES = ["Canberra", "Sydney", "Melbourne"];
 
 const headerContainer = staggerContainer(0.1);
 const bentoContainer = staggerContainer(0.12, 0.08);
