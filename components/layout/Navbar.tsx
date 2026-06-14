@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
+import BrandLogo from "@/components/layout/BrandLogo";
 import HamburgerMenuOverlay, { type MenuItem } from "@/components/ui/hamburger-menu-overlay";
 
 interface NavLink {
@@ -164,16 +165,13 @@ export default function Navbar() {
       <header className={`navbar ${isScrolled ? "navbar-blur" : ""} ${menuOpen ? "navbar-menu-open" : ""}`}>
         <div className="navbar-blur-layer" aria-hidden="true" />
         <div className="navbar-inner container flex-between" style={{ paddingBlock: 0 }}>
-          <Link href="/" className="flex items-center gap-2" aria-label="Hyper Nest — home">
+          <Link href="/" className="navbar-logo" aria-label="Hyper Nest — home">
             <motion.span
-              className="flex items-center gap-2"
-              whileHover={{ opacity: 0.8 }}
+              className="navbar-logo-inner"
+              whileHover={{ opacity: 0.85 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span className="logo-dot" aria-hidden="true" />
-              <span className="logo-text">
-                Hyper<span className="text-primary">Nest</span>
-              </span>
+              <BrandLogo height={32} priority />
             </motion.span>
           </Link>
 

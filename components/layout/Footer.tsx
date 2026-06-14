@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import BrandLogo from "@/components/layout/BrandLogo";
 import {
   fadeUp,
   slideFromLeft,
@@ -110,10 +111,7 @@ export default function Footer() {
           >
             <motion.div className="footer-mega-brand footer-mega-brand--desktop" variants={fadeUp}>
               <Link href="/" className="footer-mega-logo" aria-label={`${SITE.brandName} — home`}>
-                <span className="logo-dot" aria-hidden="true" />
-                <span className="logo-text">
-                  Hyper<span className="text-primary">Nest</span>
-                </span>
+                <BrandLogo height={34} variant="footer" className="brand-logo--footer" />
               </Link>
               <p className="footer-mega-tagline">{SITE.tagline}</p>
               <div className="footer-mega-social" role="list" aria-label="Social media">

@@ -15,6 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en-AU" className="h-full antialiased">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="HyperNest" />
+      </head>
       <body className="min-h-full flex flex-col bg-bg text-ink">
         <GlobalStructuredData />
         <SmoothScrollProvider>

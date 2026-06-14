@@ -4021,8 +4021,30 @@ a.contact-info-item:hover .contact-info-value {
 .footer-mega-logo {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
   margin-bottom: 1.25rem;
+}
+
+.brand-logo {
+  width: auto;
+  height: auto;
+  max-height: 32px;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-logo--footer {
+  max-height: 34px;
+}
+
+.navbar-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navbar-logo-inner {
+  display: inline-flex;
+  align-items: center;
 }
 
 .footer-mega-tagline {
