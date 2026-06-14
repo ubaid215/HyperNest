@@ -2,12 +2,9 @@ import type { Metadata } from "next";
 import AmbientEffects from "@/components/ui/AmbientEffects";
 import LegalPageContent from "@/components/legal/LegalPageContent";
 import { PRIVACY_POLICY } from "@/lib/legal-data";
+import { PAGE_SEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy — Hyper Nest",
-  description:
-    "Learn how Hyper Nest collects, uses, and protects your personal information.",
-};
+export const metadata: Metadata = PAGE_SEO.privacy;
 
 export default function PrivacyPage() {
   return (

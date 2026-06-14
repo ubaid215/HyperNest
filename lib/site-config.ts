@@ -14,8 +14,11 @@ export const SITE = {
     street: "2 / 74 Katherine Ave",
     suburb: "Amaroo",
     state: "Australian Capital Territory",
+    stateCode: "ACT",
     postcode: "2914",
     country: "Australia",
+    countryCode: "AU",
     full: "2 / 74 Katherine Ave, Amaroo, Australian Capital Territory, 2914, Australia",
   },
+  url: "https://www.hypernest.com.au",
 } as const;
