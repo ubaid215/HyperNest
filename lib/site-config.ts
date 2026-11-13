@@ -8,8 +8,8 @@ export const SITE = {
   email: "office@hypernest.com.au",
   emailHref: "mailto:office@hypernest.com.au",
   phone: "+61251003576",
-phoneDisplay: "+61 2 5100 3576",
-phoneHref: "tel:+61251003576",
+  phoneDisplay: "+61 2 5100 3576",
+  phoneHref: "tel:+61251003576",
   address: {
   street: "490 Northbourne Avenue",
   suburb: "Dickson",

@@ -22,7 +22,7 @@ export const SEO = {
     "SEO services Australia",
     "mobile app development Canberra",
     "Hyper Nest",
-    "web design Amaroo",
+    "web design Dickson",
     "Australian digital agency",
   ],
 } as const;
@@ -74,8 +74,8 @@ export function buildPageMetadata({
     other: {
       "geo.region": SEO.region,
       "geo.placename": SITE.address.suburb,
-      "geo.position": "-35.168;149.134",
-      ICBM: "-35.168, 149.134",
+      "geo.position": "-35.249;149.137",
+      ICBM: "-35.249, 149.137",
       "content-language": SEO.language,
     },
   };
@@ -108,12 +108,12 @@ export const PAGE_SEO = {
   contact: buildPageMetadata({
     title: "Contact Hyper Nest | Free Discovery Call Canberra",
     description:
-      "Contact Hyper Nest in Amaroo, ACT. Call +61 405 799 239 or email office@hypernest.com.au for a free discovery call about your next website, app, or digital project.",
+      "Contact Hyper Nest in Dickson, ACT. Call (02) 5100 3576 or email office@hypernest.com.au for a free discovery call about your next website, app, or digital project.",
     path: "/contact",
     keywords: [
       "contact web designer Canberra",
       "get a quote website Australia",
-      "digital agency Amaroo",
+      "digital agency Dickson",
     ],
   }),
   privacy: buildPageMetadata({
